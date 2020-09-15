@@ -1,11 +1,77 @@
 <?php
-// Start the session
+// include ("questions.php");
+include ("generate_questions.php");
 
-// Include questions from the questions.php file
+// Start the session
+session_start();
 
 // Make a variable to hold the total number of questions to ask
 
-// Make a variable to hold the toast message and set it to an empty string
+
+
+$show_score = false;
+
+$totalQuestions = count($noOfQuestions);
+
+// Variable to hold the toast message
+$toast = null;
+
+// Check if the answer was corect or not and display relevant message
+
+// Check if the answer was corect or not and display relevant message
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        
+        var_dump($_POST["index"]);
+        var_dump($questions[$_POST["index"]]);
+        if ($_POST['answer'] == $questions[$_POST["index"]]['correctAnswer']) {
+        $toast = "Well done! That's correct";
+        $_SESSION['totalCorrect']++;
+    } else {
+        $toast = "Bummer! That was incorrect";
+    }
+}
+
+if (!isset($_SESSION['used_indexes'])) {
+   $_SESSION['used_indexes'] = [];
+   $_SESSION['totalCorrect'] = 0;   
+} 
+
+if (count($_SESSION['used_indexes']) == $totalQuestions) {
+    $_SESSION['used_indexes'] = [];
+    $show_score = true;
+} else {
+    $show_score = false;
+    if (count($_SESSION['used_indexes']) == 0) {
+        $_SESSION['totalCorrect'] = 0;
+        $toast = "";
+    }
+    do {
+       
+    $index = rand(0, $totalQuestions-1);
+    } while (in_array($index, $_SESSION['used_indexes']));
+    array_push($_SESSION['used_indexes'],$index);
+    $question = $questions[$index];
+    
+    
+
+    
+    
+    // Create an array of possible answers
+$answers = array($question["correctAnswer"],
+$question["firstIncorrectAnswer"],
+$question["secondIncorrectAnswer"]
+);
+// Shuffle the answers order
+shuffle($answers);
+}
+
+
+
+
+// Include questions from the questions.php file
+
+
+
 
 // Make a variable to determine if the score will be shown or not. Set it to false.
 
@@ -14,15 +80,6 @@
 // Make a variable to hold the current question. Assign null to it.
 
 
-/*
-    If the server request was of type POST
-        Check if the user's answer was equal to the correct answer.
-        If it was correct:
-            1. Assign a congratulutory string to the toast variable
-            2. Ancrement the session variable that holds the total number correct by one.
-        Otherwise:
-            1. Assign a bummer message to the toast variable.
-*/
 
 /*
     Check if a session variable has ever been set/created to hold the indexes of questions already asked.
