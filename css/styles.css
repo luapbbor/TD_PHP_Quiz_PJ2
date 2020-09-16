@@ -73,3 +73,8 @@ p {
 .btn:focus {
   outline: none;
 }
+
+#startAgain {
+  background-color: #81c6ff;
+
+}
